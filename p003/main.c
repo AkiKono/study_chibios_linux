@@ -24,6 +24,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+// hardware 
 #include "hw.h"
 
 #define LED_GREEN			0
@@ -77,22 +78,23 @@ static PWMConfig pwmcfg = {
 static THD_WORKING_AREA(led_thread_wa, 128);
 static THD_WORKING_AREA(pwm_thread_wa, 128);
 
+// pwm calls run function
 static void run(void){
   int mdelay = 5;
 
   for(int i=0; i<30; i++){
     // step 1
-    palSetPadMode(GPIOA, 10, PAL_MODE_ALTERNATE(1));  //H1
-    palSetPadMode(GPIOA,  9, PAL_MODE_UNCONNECTED);   //H2
-    palSetPadMode(GPIOA,  8, PAL_MODE_UNCONNECTED);   //H3
+    palSetPadMode(GPIOA, 10, PAL_MODE_ALTERNATE(1));  //H1  activate
+    palSetPadMode(GPIOA,  9, PAL_MODE_UNCONNECTED);   //H2  deactivate
+    palSetPadMode(GPIOA,  8, PAL_MODE_UNCONNECTED);   //H3  deactivate
     palSetPadMode(GPIOB, 15, PAL_MODE_UNCONNECTED);   //L1
-    palSetPadMode(GPIOB, 14, PAL_MODE_ALTERNATE(1));  //L2
+    palSetPadMode(GPIOB, 14, PAL_MODE_ALTERNATE(1));  //L2  activate
     palSetPadMode(GPIOB, 13, PAL_MODE_UNCONNECTED);   //L3
     chThdSleepMilliseconds(mdelay);
 
     // step 6
-    palSetPadMode(GPIOA, 10, PAL_MODE_ALTERNATE(1));  //H1
-    palSetPadMode(GPIOA,  9, PAL_MODE_UNCONNECTED);   //H2
+    palSetPadMode(GPIOA, 10, PAL_MODE_ALTERNATE(1));  //H1  activate
+    palSetPadMode(GPIOA,  9, PAL_MODE_UNCONNECTED);   //H2  deactivate
     palSetPadMode(GPIOA,  8, PAL_MODE_UNCONNECTED);   //H3
     palSetPadMode(GPIOB, 15, PAL_MODE_UNCONNECTED);   //L1
     palSetPadMode(GPIOB, 14, PAL_MODE_UNCONNECTED);   //L2
@@ -239,7 +241,7 @@ int main(void) {
 	hw_init_gpio();
 	LED_RED_OFF();
 	LED_GREEN_OFF();
-
+	//led_thread_wa = memory space name: NORALPRIO = priority level: 
 	chThdCreateStatic(led_thread_wa, sizeof(led_thread_wa), NORMALPRIO, led_thread, NULL);
 	//chThdCreateStatic(pwm_thread_wa, sizeof(pwm_thread_wa), NORMALPRIO, pwm_thread, NULL);
 
